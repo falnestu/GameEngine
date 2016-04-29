@@ -1,4 +1,4 @@
-Time = {
+var Time = {
 	Time : 0,
 	DeltaTime : 0,
 	TimeScale : 0,

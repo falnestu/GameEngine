@@ -9,8 +9,8 @@ window.RequestAnimationFrame = (function(){
     };
 })();
 
-/*Scenes["Loader"] = new Loader();
-Application.LoadedScene = Scenes["Loader"];*/
+Scenes["Loader"] = new Loader();
+Application.LoadedScene = Scenes["Loader"];
 
 
 document.addEventListener("keydown", Input.KeyDown);
@@ -45,7 +45,29 @@ function ImageLoaded(imageLoaded) {
 
 }
 
-//Run();
+/*//Tests RangeFloat
+console.log("START EXCLUSIVE TEST");
+var count = 0;
+for (var i = 0; i < 100000000; i++) {
+    var rand = Math.Random.RangeFloat(0,1,false);
+    if( rand == 0 || rand == 1){
+        count++;
+        console.log("exclusif marche pas");
+    }
+}
+console.log(count);
+count = 0;
+console.log("START INCLUSIVE TEST");
+for (var i = 0; i < 10000000; i++) {
+    var rand = Math.Random.RangeFloat(0,0.1,true);
+    if( rand == 0 || rand == 0.1){
+        count++;
+        console.log("inclusif marche ");
+    }
+}
+console.log(count);*/
+
+Run();
 
 var btn = document.getElementById("test");
 btn.addEventListener('click', function() {

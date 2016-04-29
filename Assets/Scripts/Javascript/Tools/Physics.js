@@ -1,4 +1,77 @@
 var Physics = {
+
+	typeOfStruct : function(struct) {
+		if (struct.x != undefined && typeof struct.x == "number" &&
+				struct.y != undefined && typeof struct.y == "number") 
+		{
+			if (struct.radius != undefined && typeof struct.radius == "number") {
+				return "Circle";
+			}
+			if (struct.w != undefined && typeof struct.w == "number" &&
+				struct.h != undefined && typeof struct.h == "number") 
+			{
+				return "Box";
+			}
+			return "Point";
+		}
+	},
+
+	CheckCollision : function() {
+		var args = [];
+		for (var i = 0; i < arguments.length; i++) {
+			args.push(arguments[i]);
+		}
+
+		if (arguments.length == 2) {
+			var point = args.find(x => this.typeOfStruct(x) == "Point");
+			var boxs = args.filter(x => this.typeOfStruct(x) == "Box");
+			var circles = args.filter(x => this.typeOfStruct(x) == "Circle");
+
+			if (point != undefined) {
+				if (boxs.length) {
+					return this.PointBoxCollision(point, boxs[0]);
+				} else if (circles.length) {
+					return this.PointCircleCollision(point, circles[0]);
+				}
+			} else if (boxs.length) {
+				if (boxs.length == 2) {
+					return this.BoxBoxCollision(boxs[0], boxs[1]);
+				} else {
+					if (circles.length) {
+						return this.CircleBoxCollision(circles[0], boxs[0]);
+					}
+				}
+			} else if (circles.length == 2) {
+				return this.CircleCircleCollision(circles[0], circles[1]);
+			}
+		} else if (arguments.length == 4) {
+			return this.TileCollision(arguments[0], arguments[1], arguments[2], arguments[3]);
+		}
+
+		console.log("Error : CheckCollision doesn't accept your arguments");
+		return false;
+	},
+
+	CheckClick : function() {
+		for (var i = 0; i < Application.LoadedScene.GameObjects.length; i++) {
+			var go = Application.LoadedScene.GameObjects[i];
+			if (go.Physics.clickable) {
+				if (this.CheckCollision(Input.MousePosition,{
+					x : go.Physics.boxCollider.position.x,
+					y : go.Physics.boxCollider.position.y,
+					w : go.Physics.boxCollider.size.x,
+					h : go.Physics.boxCollider.size.y
+				})) 
+				{
+					if (!Input.MouseClick) go.OnHovered();
+						else go.OnClicked();
+				} else {
+						go.UnHovered();
+				}
+			}
+		}
+	},
+
 	PointBoxCollision : function(point, box) {
 		if (point.x >= box.x && point.x <= box.x + box.w) {
 			if (point.y >= box.y && point.y <= box.y + box.h) {
@@ -36,6 +109,7 @@ var Physics = {
 	},
 
 	PointCircleCollision : function(point, circle) {
+		//Il faut que point soit une instance de Vector
 		var dist = point.sub(circle);
 		if (dist.length < circle.radius) {
 			return true;

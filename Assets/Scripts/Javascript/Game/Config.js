@@ -17,8 +17,6 @@ var ImagesPath = [
 	//{ name : "monImage", path : "dead.png" }
 ];
 
-console.log(ImagesPath);
-
 var Images = {
 	//"monImage" : object
 };

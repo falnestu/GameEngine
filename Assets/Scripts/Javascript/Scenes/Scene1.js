@@ -24,10 +24,10 @@ function Scene1() {
 
 	this.Update = function() {
 		if (!Application.GamePaused) {
+			Physics.CheckClick();
 			for (var i = 0; i < this.GameObjects.length; i++) {
 				this.GameObjects[i].Start();
 			}
-
 		}
 		this.GUI();
 	}

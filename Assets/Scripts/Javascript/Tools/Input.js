@@ -5,7 +5,10 @@ var Input = {
 		x : 0,
 		y : 0
 	},
-
+	MouseClickPosition : {
+		x : 0,
+		y : 0
+	},
 	KeyDown : function(event) {
 		Input.KeysDown[event.keyCode] = true;
 	},
@@ -21,6 +24,10 @@ var Input = {
 	},
 
 	MouseDown : function(event) {
+		if (!Input.MouseClick) {
+			Input.MouseClickPosition.x = Input.MousePosition.x;
+			Input.MouseClickPosition.y = Input.MousePosition.y;
+		}
 		Input.MouseClick = true;
 		Input.MouseLongClick = true;
 		Input.MouseReload = 0;
