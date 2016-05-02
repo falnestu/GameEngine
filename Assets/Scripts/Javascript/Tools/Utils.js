@@ -16,3 +16,9 @@ Math.DegreeToRadian = function(deg) {
 Math.RadianToDegree = function(rad) {
 	return rad * 180 / Math.PI;
 }
+
+function drawText(label, value, x, y, color = "white") {
+	ctx.font = '14px Georgia';
+	ctx.fillStyle = color;
+	ctx.fillText( label + ' : ' + value, x, y);
+}

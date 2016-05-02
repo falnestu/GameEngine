@@ -12,18 +12,61 @@ function GameObject()
 		scale : new Vector(),
 		pivot : new Vector()
 	}
+
 	this.Physics = {
 		enabled: true,
 		clickable : false,
 		dragAndDroppable : false,
-		colliderIsSameSizeAsTransform : false,
+		colliderIsSameSizeAsTransform : true,
 		boxCollider : {
 			position : new Vector(),
-			size : new Vector()
+			size : new Vector(),
+			scale : new Vector(),
+			pivot : new Vector()
 		}
 	}
 
+	this.SetPosition = function (x,y) {
+		this.Transform.position.x = x;
+		this.Transform.position.y = y;
+		if (!this.Physics.colliderIsSameSizeAsTransform) {
+			this.Physics.boxCollider.position.x = this.Physics.boxCollider.position.x;
+			this.Physics.boxCollider.position.y = this.Physics.boxCollider.position.y;
+		}
+	}
+
+	this.SetSize = function(x,y) {
+		this.Transform.size.x = x;
+		this.Transform.size.y = y;
+		if (!this.Physics.colliderIsSameSizeAsTransform) {
+			this.Physics.boxCollider.size.x = this.Physics.boxCollider.size.x;
+			this.Physics.boxCollider.size.y = this.Physics.boxCollider.size.y;
+		}
+	}
+
+	this.SetScale = function(x,y) {
+		this.Transform.scale.x = x;
+		this.Transform.scale.y = y;
+		if (!this.Physics.colliderIsSameSizeAsTransform) {
+			this.Physics.boxCollider.scale.x = this.Physics.boxCollider.scale.x;
+			this.Physics.boxCollider.scale.y = this.Physics.boxCollider.scale.y;
+		}		
+	}
+
+	this.SetPivot = function(x,y) {
+		this.Transform.pivot.x = x;
+		this.Transform.pivot.y = y;
+		if (!this.Physics.colliderIsSameSizeAsTransform) {
+			this.Physics.boxCollider.pivot.x = this.Physics.boxCollider.pivot.x;
+			this.Physics.boxCollider.pivot.y = this.Physics.boxCollider.position.y;
+		}		
+	}
+
 	this.Awake = function() {
+		this.Transform.position.x = 200;
+		this.Transform.position.y = 200;
+		this.Transform.size.x = 128;
+		this.Transform.size.y = 192;
 		this.Transform.scale.x = 1;
 		this.Transform.scale.y = 1;
 		this.Transform.pivot.x = 0.5;
@@ -35,10 +78,7 @@ function GameObject()
 	this.Start = function() {
 		if (!this.started) {
 			//To do on start
-			this.Transform.position.x = 200;
-			this.Transform.position.y = 200;
-			this.Transform.size.x = 128;
-			this.Transform.size.y = 192;
+
 			this.Renderer.Material.source = Images["SpriteSheet"];
 			this.Renderer.Material.SizeFrame.x = 32;
 			this.Renderer.Material.SizeFrame.y = 48;
@@ -57,8 +97,8 @@ function GameObject()
 			}
 			console.log(this.Renderer.Animation.animations)
 			this.Renderer.Animation.current = this.Renderer.Animation.animations[0];
-			if (this.colliderIsSameSizeAsTransform) {
-				this.Transform.size = this.boxCollider.size;
+			if (this.Physics.colliderIsSameSizeAsTransform) {
+				this.Physics.boxCollider = this.Transform;
 			}
 			this.started = true;
 			console.log("%c System:GameObject " + this.name + " Started!", 'background:#222; color:#bada55');
@@ -68,26 +108,30 @@ function GameObject()
 
 	this.Update = function() {
 		if (this.enabled) {
-			if (Input.KeysDown[37]) {
+			if (Input.KeysDown[37]){ //GAUCHE
 				this.Renderer.Animation.current = this.Renderer.Animation.animations[1];
 				this.Renderer.Animation.animated = true;
-			}else if (Input.KeysDown[39]) {
+				this.Transform.position.x -= 10;
+			}else if (Input.KeysDown[39]){ //DROITE
 				this.Renderer.Animation.animated = true;
 				this.Renderer.Animation.current = this.Renderer.Animation.animations[2];
-			}else if (Input.KeysDown[38]) {
+				this.Transform.position.x += 10;
+			}else if (Input.KeysDown[38]){ //HAUT
 				this.Renderer.Animation.animated = true;
 				this.Renderer.Animation.current = this.Renderer.Animation.animations[3];
-			}else if (Input.KeysDown[40]) {
+				this.Transform.position.y -= 10;
+			}else if (Input.KeysDown[40]){ //BAS
 				this.Renderer.Animation.animated = true;
 				this.Renderer.Animation.current = this.Renderer.Animation.animations[0];
+				this.Transform.position.y += 10;
 			}
 			else {
 				this.Renderer.Animation.animated = false;
-				this.Renderer.Animation.currentFrame = 0;
-				this.Renderer.Material.CurrentFrame = this.Renderer.Animation.current[0];
+
 			}
 			this.Renderer.Draw();
 		}
+
 		this.GUI();
 	}
 
@@ -111,6 +155,21 @@ function GameObject()
 		Draw : function() {
 			if (this.isSpriteSheet) {
 				//tourner les animations
+				
+				if (this.Animation.animated) {
+					this.Animation.framesAnimate+= Time.DeltaTime;
+					if (this.Animation.framesAnimate >=  (this.Animation.currentFrame+1) * this.Animation.totalAnimationLength / this.Animation.current.length) {
+						this.Animation.currentFrame++;
+						if (this.Animation.currentFrame >= this.Animation.current.length) {
+							this.Animation.currentFrame = 0;
+							this.Animation.framesAnimate = 0;
+						}
+					}
+				} else {
+					this.Animation.currentFrame = 0;
+					this.Animation.framesAnimate = 0;
+				}
+				this.Material.CurrentFrame = this.Animation.current[this.Animation.currentFrame];
 				ctx.drawImage(this.Material.source,
 							this.Material.CurrentFrame.x,
 							this.Material.CurrentFrame.y,
@@ -120,18 +179,6 @@ function GameObject()
 							this.that.position.y - this.that.pivot.y * this.that.size.y * this.that.scale.y,
 							this.that.size.x * this.that.scale.x,
 							this.that.size.y * this.that.scale.x);
-				if (this.Animation.animated) {
-					this.Animation.framesAnimate+= Time.DeltaTime;
-					console.log(this.Animation.framesAnimate)
-					if (this.Animation.framesAnimate >=  (this.Animation.currentFrame+1) * this.Animation.totalAnimationLength / this.Animation.current.length) {
-						this.Animation.currentFrame++;
-						if (this.Animation.currentFrame >= this.Animation.current.length) {
-							this.Animation.currentFrame = 0;
-							this.Animation.framesAnimate = 0;
-						}
-						this.Material.CurrentFrame = this.Animation.current[this.Animation.currentFrame];
-					}	
-				}
 			}
 			else{
 				ctx.drawImage(this.Material.source,
@@ -144,7 +191,9 @@ function GameObject()
 	}
 
 	this.GUI = function() {
-
+		if (Application.isDebug) {
+			Debug.GameObject();
+		}
 	}
 
 	this.OnClicked = function() {

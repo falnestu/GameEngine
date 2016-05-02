@@ -6,6 +6,7 @@ function Scene1() {
 	this.started = false;
 
 	this.Awake = function() {
+		Application.isDebug = true;
 		console.clear();
 		console.log("%c System:Scene " + this.name + " Created!", 'background:#222; color:#bada55');
 	}
@@ -29,6 +30,9 @@ function Scene1() {
 			for (var i = 0; i < this.GameObjects.length; i++) {
 				this.GameObjects[i].Start();
 			}
+		}
+		if (Application.isDebug) {
+			Debug.Scene();
 		}
 		this.GUI();
 	}

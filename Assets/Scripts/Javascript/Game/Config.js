@@ -6,7 +6,8 @@ var Scenes = {};
 var Application = 
 {
 	LoadedScene : null,
-	GamePaused : false
+	GamePaused : false,
+	isDebug : false
 };
 
 var Gravity = new Vector();
@@ -21,4 +22,7 @@ var Images = {
 	//"monImage" : object
 };
 
+var allImagesLoaded = false;
+
 var TilesWalkable = [];
+
