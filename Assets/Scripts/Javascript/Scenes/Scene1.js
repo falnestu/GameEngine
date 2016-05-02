@@ -14,7 +14,8 @@ function Scene1() {
 		if (!this.started) {
 			Time.SetTimeWhenSceneBegin();
 			//First Frame
-			this.GameObjects.push(new GameObject1());
+			//this.GameObjects.push(new GameObject1());
+			this.GameObjects.push(new GameObject());
 			this.started = true;
 			console.log("%c System:Scene " + this.name + " Started!", 'background:#222; color:#bada55');
 			Time.SetTimeWhenSceneLoaded();

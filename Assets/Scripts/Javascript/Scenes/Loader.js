@@ -6,6 +6,7 @@ function Loader() {
 	this.started = false;
 
 	this.Awake = function() {
+		LoadImages();
 		console.clear();
 		console.log("%c System:Scene " + this.name + " Created!", 'background:#222; color:#bada55');
 	}
@@ -14,6 +15,7 @@ function Loader() {
 		if (!this.started) {
 			Time.SetTimeWhenGameBegin();
 			//First Frame
+
 			Scenes["Scene1"] = new Scene1();
 			Scenes["Scene2"] = new Scene2();
 			Application.LoadedScene = Scenes["Scene1"];

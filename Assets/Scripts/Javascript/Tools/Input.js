@@ -9,6 +9,7 @@ var Input = {
 		x : 0,
 		y : 0
 	},
+
 	KeyDown : function(event) {
 		Input.KeysDown[event.keyCode] = true;
 	},

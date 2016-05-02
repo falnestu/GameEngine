@@ -14,7 +14,7 @@ var Gravity = new Vector();
 	Gravity.y = -2;
 
 var ImagesPath = [
-	//{ name : "monImage", path : "dead.png" }
+	{ name : "SpriteSheet", path : "sprites.png" }
 ];
 
 var Images = {
