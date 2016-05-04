@@ -32,7 +32,7 @@ function LoadImages() {
 
         Images[name].onload = function() {
             count++;
-            //Scene.loader.imageLoaded = count;
+            Scenes.Loader.imageLoaded = count;
             if (count == ImagesPath.length) {
                 ImageLoaded(count);
             }
@@ -46,27 +46,7 @@ function ImageLoaded(imageLoaded) {
 
 }
 
-/*//Tests RangeFloat
-console.log("START EXCLUSIVE TEST");
-var count = 0;
-for (var i = 0; i < 100000000; i++) {
-    var rand = Math.Random.RangeFloat(0,1,false);
-    if( rand == 0 || rand == 1){
-        count++;
-        console.log("exclusif marche pas");
-    }
-}
-console.log(count);
-count = 0;
-console.log("START INCLUSIVE TEST");
-for (var i = 0; i < 10000000; i++) {
-    var rand = Math.Random.RangeFloat(0,0.1,true);
-    if( rand == 0 || rand == 0.1){
-        count++;
-        console.log("inclusif marche ");
-    }
-}
-console.log(count);*/
+
 
 Run();
 

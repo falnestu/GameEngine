@@ -1,10 +1,12 @@
-function GameObject() 
+function ParticlesSystem() 
 {
-	this.name = "Model";
+	this.name = "ParticlesSystem";
 	this.enabled = true;
 	this.started = false;
 	this.frameHovered = 0;
-	this.rendered = true;
+	this.rendered = false;
+	this.emitters = [];
+	this.fields = [];
 
 	this.Transform = {
 		position : new Vector(),
@@ -64,6 +66,8 @@ function GameObject()
 	}
 
 	this.Awake = function() {
+		this.Transform.position.x = 100;
+		this.Transform.position.y = 100;
 		console.clear();
 		console.log("%c System:GameObject " + this.name + " Created!", 'background:#222; color:#bada55');
 	}
@@ -71,6 +75,20 @@ function GameObject()
 	this.Start = function() {
 		if (!this.started) {
 			//To do on start
+			var positionEmitter = new Vector();
+				positionEmitter.x = canvas.width / 2 - 150;
+				positionEmitter.y = canvas.height / 2;
+			var velocityEmitter = new Vector();
+				velocityEmitter.x = 2 * Math.cos(0);
+				velocityEmitter.y = 2 * Math.sin(0); 
+
+			this.emitters.push(new Emitter(positionEmitter, velocityEmitter, Math.PI/32, 20));
+
+			var positionField = new Vector();
+				positionField.x = canvas.width / 2 + 150;
+				positionField.y = canvas.height / 2;
+			this.fields.push(new Field(positionField, -140));
+
 			if (this.Renderer.isSpriteSheet) {
 				for (var y = 0; y * this.Renderer.Material.SizeFrame.y < this.Renderer.Material.source.height; y++) {
 					this.Renderer.Animation.animations.push([]);
@@ -94,9 +112,16 @@ function GameObject()
 
 	this.Update = function() {
 		if (this.enabled) {
-			if (this.rendered) {
-				this.Renderer.Draw();
+			for(var emitter in this.emitters){
+				this.emitters[emitter].update();
 			}
+			for (var field in this.fields){
+				ctx.fillStyle = this.fields[field].drawColor;
+				ctx.fillRect(this.fields[field].position.x, this.fields[field].position.y, 10, 10);
+			}
+/*			if (this.rendered) {
+				this.Renderer.Draw();
+			}*/
 		}
 		this.GUI();
 	}
@@ -104,7 +129,7 @@ function GameObject()
 	this.Renderer = {
 		that : this.Transform,
 		isVisible : true,
-		isSpriteSheet : true,
+		isSpriteSheet : false,
 		Material : {
 			source : "",
 			SizeFrame : new Vector(),

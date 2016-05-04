@@ -53,5 +53,21 @@ function Vector() {
 		return Vector;
 	}
 
+	this.getAngle = function() {
+		return Math.atan2(this.y, this.x)
+	}
+
+	//Next point from angle
+	this.fromAngle = function(angle) {
+		var vector = new Vector();
+		vector.x = this.length() * Math.cos(angle);
+		vector.y = this.length() * Math.sin(angle);
+		return vector;
+	}
+
+	this.outOfBounds = function() {
+		return this.x < 0 || this.x > canvas.width ||
+			 this.y < 0 || this.y > canvas.height;
+	}
 }
 

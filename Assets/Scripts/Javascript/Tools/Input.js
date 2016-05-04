@@ -11,7 +11,7 @@ var Input = {
 	},
 
 	KeyDown : function(event) {
-		event.preventDefault();
+		//event.preventDefault();
 		event.stopPropagation();
 		Input.KeysDown[event.keyCode] = true;
 	},

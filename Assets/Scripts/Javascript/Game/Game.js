@@ -1,8 +1,9 @@
 function Run() {
 	Time.SetTimeValues();
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	console.log("it work");
-
+	ctx.fillStyle = "rgba(255,255,255,0.6)";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 	if (Application.LoadedScene != null) {
 		Application.LoadedScene.Start();
 	}

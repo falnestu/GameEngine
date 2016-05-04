@@ -7,7 +7,7 @@ function Loader() {
 
 	this.Awake = function() {
 		LoadImages();
-		console.clear();
+		//console.clear();
 		console.log("%c System:Scene " + this.name + " Created!", 'background:#222; color:#bada55');
 	}
 
@@ -16,8 +16,6 @@ function Loader() {
 			Time.SetTimeWhenGameBegin();
 			//First Frame
 			Scenes["Scene1"] = new Scene1();
-			//Scenes["Scene2"] = new Scene2();
-			Application.LoadedScene = Scenes["Scene1"];
 			this.started = true;
 			console.log("%c System:Scene " + this.name + " Started!", 'background:#222; color:#bada55');
 			Time.SetTimeWhenGameLoaded();
@@ -26,10 +24,8 @@ function Loader() {
 	}
 
 	this.Update = function() {
-		if (!Application.GamePaused) {
-			for (var i = 0; i < this.GameObjects.length; i++) {
-				//this.GameObjects[i].Start();
-			}	
+		if (this.imageLoaded) {
+			Application.LoadedScene = Scenes["Scene1"];
 		}
 		this.GUI();
 	}
